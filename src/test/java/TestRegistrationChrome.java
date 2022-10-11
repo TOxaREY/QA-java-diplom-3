@@ -3,33 +3,25 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import ru.yandex.praktikum.diplom.POM.HomePagePOM;
-import ru.yandex.praktikum.diplom.POM.LoginPagePOM;
-import ru.yandex.praktikum.diplom.POM.RegisterPagePOM;
+import ru.yandex.praktikum.diplom.pom.HomePageObject;
+import ru.yandex.praktikum.diplom.pom.LoginPageObject;
+import ru.yandex.praktikum.diplom.pom.RegisterPageObject;
 import ru.yandex.praktikum.diplom.data.User;
 
-import static ru.yandex.praktikum.diplom.data.URLAddress.STELLARBURGERS_URL;
 
 @DisplayName("Тесты регистрации на сайте в Chrome")
-public class TestRegistrationChrome {
+public class TestRegistrationChrome extends BaseTest {
     private WebDriver driver;
-    private HomePagePOM objHomePage;
-    private LoginPagePOM objLoginPage;
-    private RegisterPagePOM objRegisterPage;
+    private LoginPageObject objLoginPage;
+    private RegisterPageObject objRegisterPage;
+
     @Before
     public void setUp() {
-        driver = new ChromeDriver();
-        driver.get(STELLARBURGERS_URL);
-        driver.manage().window().maximize();
-        objHomePage = new HomePagePOM(driver);
-        objLoginPage = new LoginPagePOM(driver);
-        objRegisterPage = new RegisterPagePOM(driver);
-        objHomePage.waitForLoadHomePage();
-        objHomePage.clickAccountLink();
-        objLoginPage.waitForLoadLoginPage();
-        objLoginPage.clickRegisterLink();
-        objRegisterPage.waitForLoadRegisterPage();
+        driver = super.setBrowser("chrome");
+        HomePageObject objHomePage = new HomePageObject(driver);
+        objLoginPage = new LoginPageObject(driver);
+        objRegisterPage = new RegisterPageObject(driver);
+        super.setUpRegistration(driver, objHomePage, objLoginPage, objRegisterPage);
     }
 
     @Test
@@ -50,6 +42,6 @@ public class TestRegistrationChrome {
 
     @After
     public void tearDown() {
-        driver.quit();
+        super.tearDown(driver);
     }
 }

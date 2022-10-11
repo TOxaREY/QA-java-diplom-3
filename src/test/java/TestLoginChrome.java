@@ -3,22 +3,18 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import ru.yandex.praktikum.diplom.POM.ForgotPasswordPagePOM;
-import ru.yandex.praktikum.diplom.POM.HomePagePOM;
-import ru.yandex.praktikum.diplom.POM.LoginPagePOM;
-import ru.yandex.praktikum.diplom.POM.RegisterPagePOM;
+import ru.yandex.praktikum.diplom.pom.*;
 import ru.yandex.praktikum.diplom.data.User;
 
-import static ru.yandex.praktikum.diplom.data.URLAddress.STELLARBURGERS_URL;
 
 @DisplayName("Тесты входа на сайте в Chrome")
-public class TestLoginChrome {
+public class TestLoginChrome extends BaseTest {
     private WebDriver driver;
-    private HomePagePOM objHomePage;
-    private LoginPagePOM objLoginPage;
-    private RegisterPagePOM objRegisterPage;
-    private ForgotPasswordPagePOM objForgotPasswordPage;
+    private HomePageObject objHomePage;
+    private LoginPageObject objLoginPage;
+    private RegisterPageObject objRegisterPage;
+    private ForgotPasswordPageObject objForgotPasswordPage;
+
     private void checkSuccessLogin() {
         objLoginPage.waitForLoadLoginPage();
         objLoginPage.setUserAndClickLoginButton(User.email, User.password);
@@ -27,23 +23,12 @@ public class TestLoginChrome {
 
     @Before
     public void setUp() {
-        driver = new ChromeDriver();
-        driver.get(STELLARBURGERS_URL);
-        driver.manage().window().maximize();
-        objHomePage = new HomePagePOM(driver);
-        objLoginPage = new LoginPagePOM(driver);
-        objRegisterPage = new RegisterPagePOM(driver);
-        objForgotPasswordPage = new ForgotPasswordPagePOM(driver);
-        objHomePage.waitForLoadHomePage();
-        objHomePage.clickAccountLink();
-        objLoginPage.waitForLoadLoginPage();
-        objLoginPage.clickRegisterLink();
-        objRegisterPage.waitForLoadRegisterPage();
-        User.setUserData();
-        objRegisterPage.setUserAndClickRegistrationButton(User.name, User.email, User.password);
-        objLoginPage.waitForLoadLoginPage();
-        objLoginPage.clickHomeLink();
-        objHomePage.waitForLoadHomePage();
+        driver = super.setBrowser("chrome");
+        objHomePage = new HomePageObject(driver);
+        objLoginPage = new LoginPageObject(driver);
+        objRegisterPage = new RegisterPageObject(driver);
+        objForgotPasswordPage = new ForgotPasswordPageObject(driver);
+        super.setUpLogin(driver, objHomePage, objLoginPage, objRegisterPage, objForgotPasswordPage);
     }
 
     @Test
@@ -84,6 +69,6 @@ public class TestLoginChrome {
 
     @After
     public void tearDown() {
-        driver.quit();
+        super.tearDown(driver);
     }
 }

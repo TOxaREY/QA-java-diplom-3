@@ -3,48 +3,23 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import ru.yandex.praktikum.diplom.POM.AccountPagePOM;
-import ru.yandex.praktikum.diplom.POM.HomePagePOM;
-import ru.yandex.praktikum.diplom.POM.LoginPagePOM;
-import ru.yandex.praktikum.diplom.POM.RegisterPagePOM;
-import ru.yandex.praktikum.diplom.data.User;
-
-import static ru.yandex.praktikum.diplom.data.URLAddress.STELLARBURGERS_URL;
+import ru.yandex.praktikum.diplom.pom.HomePageObject;
+import ru.yandex.praktikum.diplom.pom.LoginPageObject;
+import ru.yandex.praktikum.diplom.pom.RegisterPageObject;
 
 @DisplayName("Тест выхода из аккаунта в Chrome")
-public class TestSignOutChrome {
+public class TestSignOutChrome extends BaseTest {
     private WebDriver driver;
-    private HomePagePOM objHomePage;
-    private LoginPagePOM objLoginPage;
-    private RegisterPagePOM objRegisterPage;
-    private AccountPagePOM objAccountPage;
+    private HomePageObject objHomePage;
+    private LoginPageObject objLoginPage;
 
     @Before
     public void setUp() {
-        driver = new ChromeDriver();
-        driver.get(STELLARBURGERS_URL);
-        driver.manage().window().maximize();
-        objHomePage = new HomePagePOM(driver);
-        objLoginPage = new LoginPagePOM(driver);
-        objRegisterPage = new RegisterPagePOM(driver);
-        objAccountPage = new AccountPagePOM(driver);
-        objHomePage.waitForLoadHomePage();
-        objHomePage.clickAccountLink();
-        objLoginPage.waitForLoadLoginPage();
-        objLoginPage.clickRegisterLink();
-        objRegisterPage.waitForLoadRegisterPage();
-        User.setUserData();
-        objRegisterPage.setUserAndClickRegistrationButton(User.name, User.email, User.password);
-        objLoginPage.waitForLoadLoginPage();
-        objLoginPage.clickHomeLink();
-        objHomePage.waitForLoadHomePage();
-        objHomePage.clickAccountLink();
-        objLoginPage.waitForLoadLoginPage();
-        objLoginPage.setUserAndClickLoginButton(User.email, User.password);
-        objHomePage.waitForLoadHomePage();
-        objHomePage.clickAccountLink();
-        objAccountPage.waitForLoadAccountPage();
+        driver = super.setBrowser("chrome");
+        objHomePage = new HomePageObject(driver);
+        objLoginPage = new LoginPageObject(driver);
+        RegisterPageObject objRegisterPage = new RegisterPageObject(driver);
+        super.setUpSignOut(driver, objHomePage, objLoginPage, objRegisterPage);
     }
 
     @Test
@@ -57,6 +32,6 @@ public class TestSignOutChrome {
 
     @After
     public void tearDown() {
-        driver.quit();
+        super.tearDown(driver);
     }
 }
